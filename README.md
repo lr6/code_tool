@@ -10,6 +10,8 @@
 
 线上地址：https://tool.1475369.xyz
 
+源码仓库：https://github.com/lr6/code_tool
+
 ## 目录
 
 ```
@@ -31,6 +33,15 @@ npm run serve
 ```
 
 ## 部署
+
+### 自动部署（推荐）
+
+仓库已接入 Cloudflare Workers Builds，推送到 `main` 分支会自动构建并部署：
+
+- 构建命令：`npm run build`
+- 部署命令：`npx cf deploy --prebuilt`
+
+### 手动部署
 
 ```sh
 npm install
