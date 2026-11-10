@@ -1,0 +1,17 @@
+{
+  "name": "toolbox-1475369",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "开发者小工具台：URL、时间戳、JSON、Unicode、Base64",
+  "scripts": {
+    "dev": "cf dev",
+    "build": "cf build",
+    "deploy": "cf deploy",
+    "serve": "python3 -m http.server 8787 --directory public"
+  },
+  "devDependencies": {
+    "cf": "^1.0.0-beta.28",
+    "wrangler": "^4.159.0"
+  }
+}

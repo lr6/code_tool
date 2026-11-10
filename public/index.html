@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>工具台 · URL / 时间戳 / JSON / Unicode / Base64</title>
+<meta name="description" content="开发者小工具台：URL 编解码、Unix 时间戳转换、JSON 格式化校验、Unicode 转义、Base64。纯前端运行，数据不离开浏览器。">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23c2402a'/%3E%3Ctext x='16' y='23' font-family='Songti SC,serif' font-size='20' fill='%23f7f3ea' text-anchor='middle'%3E工%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要工具</a>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-cn" lang="zh">工具台</span>
+    <span class="brand-slug mono">1475369.xyz</span>
+  </div>
+  <div class="topmeta">
+    <span class="mono clock" id="utc-clock" aria-label="当前 UTC 时间">UTC --:--:--</span>
+    <span class="meta-sep" aria-hidden="true"></span>
+    <span class="mono privacy">纯本地运行 · 数据不出浏览器</span>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="工具索引">
+    <p class="rail-title mono">TOOLS / 05</p>
+    <ol class="tool-list">
+      <li>
+        <button class="tool-tab" data-tool="url" aria-current="true">
+          <span class="tab-idx mono">01</span>
+          <span class="tab-label">URL 编解码</span>
+          <kbd>Alt 1</kbd>
+        </button>
+      </li>
+      <li>
+        <button class="tool-tab" data-tool="time" aria-current="false">
+          <span class="tab-idx mono">02</span>
+          <span class="tab-label">时间戳</span>
+          <kbd>Alt 2</kbd>
+        </button>
+      </li>
+      <li>
+        <button class="tool-tab" data-tool="json" aria-current="false">
+          <span class="tab-idx mono">03</span>
+          <span class="tab-label">JSON 格式化</span>
+          <kbd>Alt 3</kbd>
+        </button>
+      </li>
+      <li>
+        <button class="tool-tab" data-tool="unicode" aria-current="false">
+          <span class="tab-idx mono">04</span>
+          <span class="tab-label">Unicode</span>
+          <kbd>Alt 4</kbd>
+        </button>
+      </li>
+      <li>
+        <button class="tool-tab" data-tool="base64" aria-current="false">
+          <span class="tab-idx mono">05</span>
+          <span class="tab-label">Base64</span>
+          <kbd>Alt 5</kbd>
+        </button>
+      </li>
+    </ol>
+    <div class="rail-foot">
+      <p>纯静态页面<br>无请求 · 无 Cookies · 无存储</p>
+      <p class="mono rail-ver">v1.0 / 2026.11</p>
+    </div>
+  </nav>
+
+  <main id="main" tabindex="-1">
+
+    <!-- 01 URL -->
+    <section class="panel" data-panel="url">
+      <header class="tool-head">
+        <p class="eyebrow mono">01 / URL</p>
+        <h1>URL 编解码</h1>
+        <p class="lede">百分号编码的编码与解码。组件模式会转义 <code>&amp; = ? /</code> 等分隔符，整条 URL 模式保留它们。</p>
+        <span class="ghost" aria-hidden="true">01</span>
+      </header>
+
+      <div class="controls">
+        <div class="seg" role="group" aria-label="URL 处理模式">
+          <button type="button" data-url-mode="component" aria-pressed="true">组件 encodeURIComponent</button>
+          <button type="button" data-url-mode="uri" aria-pressed="false">整条 encodeURI</button>
+          <button type="button" data-url-mode="decode" aria-pressed="false">解码 decodeURIComponent</button>
+        </div>
+        <span class="hint mono">输入即转换</span>
+      </div>
+
+      <div class="workbench">
+        <div class="pane">
+          <div class="pane-head">
+            <label for="url-in">输入</label>
+            <span class="pane-meta mono" id="url-in-meta">0 字符</span>
+          </div>
+          <textarea id="url-in" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="https://example.com/search?q=开发者 工具&page=2"></textarea>
+        </div>
+        <div class="swap-col">
+          <button type="button" class="swap" id="url-swap" aria-label="交换输入与输出" title="交换输入与输出">⇄</button>
+        </div>
+        <div class="pane">
+          <div class="pane-head">
+            <label for="url-out">输出</label>
+            <button type="button" class="btn copy" data-copy="url-out">复制</button>
+          </div>
+          <textarea id="url-out" readonly spellcheck="false" aria-label="URL 转换结果"></textarea>
+        </div>
+      </div>
+      <p class="statusline mono" id="url-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- 02 Timestamp -->
+    <section class="panel" data-panel="time" hidden>
+      <header class="tool-head">
+        <p class="eyebrow mono">02 / TIMESTAMP</p>
+        <h1>时间戳</h1>
+        <p class="lede">Unix 秒与毫秒自动识别。当前时间每秒刷新，转换结果同时给出本地、UTC 与 ISO 8601。</p>
+        <span class="ghost" aria-hidden="true">02</span>
+      </header>
+
+      <div class="ts-now">
+        <div>
+          <p class="field-label">当前 Unix 时间戳（秒）</p>
+          <div class="ts-now-value">
+            <strong class="mono" id="now-sec">0</strong>
+            <button type="button" class="btn copy" data-copy="now-sec">复制</button>
+          </div>
+          <p class="ts-now-ms mono">毫秒 <span id="now-ms">0</span></p>
+        </div>
+        <dl class="ts-now-meta">
+          <div><dt>本地</dt><dd class="mono" id="now-local">--</dd></div>
+          <div><dt>UTC</dt><dd class="mono" id="now-utc">--</dd></div>
+          <div><dt>ISO 8601</dt><dd class="mono" id="now-iso">--</dd></div>
+        </dl>
+      </div>
+
+      <div class="split">
+        <div class="pane">
+          <div class="pane-head">
+            <label for="ts-input">时间戳 → 日期</label>
+            <span class="pane-meta mono">秒或毫秒</span>
+          </div>
+          <div class="pane-body">
+            <input class="input mono" id="ts-input" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="ts-result">
+            <dl class="kv" id="ts-result">
+              <div><dt>识别</dt><dd id="ts-unit" class="mono">--</dd></div>
+              <div><dt>本地</dt><dd id="ts-local" class="mono">--</dd></div>
+              <div><dt>UTC</dt><dd id="ts-utc" class="mono">--</dd></div>
+              <div><dt>ISO 8601</dt><dd id="ts-iso" class="mono">--</dd></div>
+              <div><dt>相对</dt><dd id="ts-rel" class="mono">--</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="pane">
+          <div class="pane-head">
+            <label for="dt-input">日期 → 时间戳</label>
+            <button type="button" class="btn btn-ghost" id="dt-now">现在</button>
+          </div>
+          <div class="pane-body">
+            <input class="input mono" type="datetime-local" id="dt-input" step="1">
+            <dl class="kv">
+              <div>
+                <dt>秒</dt>
+                <dd class="mono" id="dt-sec">--</dd>
+                <button type="button" class="btn btn-ghost btn-mini" data-copy="dt-sec">复制</button>
+              </div>
+              <div>
+                <dt>毫秒</dt>
+                <dd class="mono" id="dt-ms">--</dd>
+                <button type="button" class="btn btn-ghost btn-mini" data-copy="dt-ms">复制</button>
+              </div>
+              <div><dt>ISO 8601</dt><dd class="mono" id="dt-iso">--</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <p class="statusline mono" id="ts-status" role="status" aria-live="polite">按本地时区解析输入的日期时间。</p>
+    </section>
+
+    <!-- 03 JSON -->
+    <section class="panel" data-panel="json" hidden>
+      <header class="tool-head">
+        <p class="eyebrow mono">03 / JSON</p>
+        <h1>JSON 格式化</h1>
+        <p class="lede">格式化、压缩与校验，出错时给出行列位置。排序键会递归处理嵌套对象，数组顺序不变。</p>
+        <span class="ghost" aria-hidden="true">03</span>
+      </header>
+
+      <div class="controls">
+        <div class="seg" role="group" aria-label="缩进宽度">
+          <button type="button" data-indent="2" aria-pressed="true">2 空格</button>
+          <button type="button" data-indent="4" aria-pressed="false">4 空格</button>
+          <button type="button" data-indent="tab" aria-pressed="false">Tab</button>
+        </div>
+        <div class="controls-right">
+          <button type="button" class="btn" id="json-minify" aria-pressed="false">压缩</button>
+          <button type="button" class="btn" id="json-sort" aria-pressed="false">排序键</button>
+          <button type="button" class="btn btn-ghost" id="json-clear">清空</button>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <div class="pane">
+          <div class="pane-head">
+            <label for="json-in">输入</label>
+            <span class="pane-meta mono" id="json-in-meta">0 字节</span>
+          </div>
+          <textarea id="json-in" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder='{"project":"工具台","tools":["url","time","json"],"build":41.7}'></textarea>
+        </div>
+        <div class="swap-col">
+          <button type="button" class="swap" id="json-copy-in" aria-label="把输出复制回输入" title="把输出复制回输入">⇄</button>
+        </div>
+        <div class="pane">
+          <div class="pane-head">
+            <label for="json-out">输出</label>
+            <button type="button" class="btn copy" data-copy="json-out">复制</button>
+          </div>
+          <textarea id="json-out" readonly spellcheck="false" aria-label="JSON 格式化结果"></textarea>
+        </div>
+      </div>
+      <p class="statusline mono" id="json-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- 04 Unicode -->
+    <section class="panel" data-panel="unicode" hidden>
+      <header class="tool-head">
+        <p class="eyebrow mono">04 / UNICODE</p>
+        <h1>Unicode</h1>
+        <p class="lede">在可读文本与 <code>\uXXXX</code> 转义之间互转，支持代理对、码点语法与 HTML 实体。</p>
+        <span class="ghost" aria-hidden="true">04</span>
+      </header>
+
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Unicode 处理模式">
+          <button type="button" data-uni-mode="nonascii" aria-pressed="true">转义非 ASCII</button>
+          <button type="button" data-uni-mode="all" aria-pressed="false">转义全部</button>
+          <button type="button" data-uni-mode="unescape" aria-pressed="false">反转义</button>
+          <button type="button" data-uni-mode="html" aria-pressed="false">HTML 实体</button>
+          <button type="button" data-uni-mode="html-decode" aria-pressed="false">实体还原</button>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <div class="pane">
+          <div class="pane-head">
+            <label for="uni-in">输入</label>
+            <span class="pane-meta mono" id="uni-in-meta">0 字符</span>
+          </div>
+          <textarea id="uni-in" spellcheck="false" autocomplete="off" autocapitalize="off">Hello, 世界 👋</textarea>
+        </div>
+        <div class="swap-col">
+          <button type="button" class="swap" id="uni-swap" aria-label="交换输入与输出" title="交换输入与输出">⇄</button>
+        </div>
+        <div class="pane">
+          <div class="pane-head">
+            <label for="uni-out">输出</label>
+            <button type="button" class="btn copy" data-copy="uni-out">复制</button>
+          </div>
+          <textarea id="uni-out" readonly spellcheck="false" aria-label="Unicode 转换结果"></textarea>
+        </div>
+      </div>
+      <p class="statusline mono" id="uni-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- 05 Base64 -->
+    <section class="panel" data-panel="base64" hidden>
+      <header class="tool-head">
+        <p class="eyebrow mono">05 / BASE64</p>
+        <h1>Base64</h1>
+        <p class="lede">按 UTF-8 编解码，中文与 emoji 不会乱码。URL-safe 模式用 <code>- _</code> 替换 <code>+ /</code> 并去掉补位。</p>
+        <span class="ghost" aria-hidden="true">05</span>
+      </header>
+
+      <div class="controls controls-start">
+        <div class="seg" role="group" aria-label="Base64 处理模式">
+          <button type="button" data-b64-mode="encode" aria-pressed="true">编码</button>
+          <button type="button" data-b64-mode="decode" aria-pressed="false">解码</button>
+        </div>
+        <label class="check">
+          <input type="checkbox" id="b64-urlsafe">
+          <span>URL-safe</span>
+        </label>
+      </div>
+
+      <div class="workbench">
+        <div class="pane">
+          <div class="pane-head">
+            <label for="b64-in">输入</label>
+            <span class="pane-meta mono" id="b64-in-meta">0 字节</span>
+          </div>
+          <textarea id="b64-in" spellcheck="false" autocomplete="off" autocapitalize="off">无网络，纯本地。</textarea>
+        </div>
+        <div class="swap-col">
+          <button type="button" class="swap" id="b64-swap" aria-label="交换输入与输出" title="交换输入与输出">⇄</button>
+        </div>
+        <div class="pane">
+          <div class="pane-head">
+            <label for="b64-out">输出</label>
+            <button type="button" class="btn copy" data-copy="b64-out">复制</button>
+          </div>
+          <textarea id="b64-out" readonly spellcheck="false" aria-label="Base64 转换结果"></textarea>
+        </div>
+      </div>
+      <p class="statusline mono" id="b64-status" role="status" aria-live="polite"></p>
+    </section>
+
+  </main>
+</div>
+
+<script src="./app.js" defer></script>
+</body>
+</html>
